@@ -1,12 +1,6 @@
 # coding: utf8
 
-#########################################################################
-## This is a samples controller
-## - index is the default action of any application
-## - user is required for authentication and authorization
-## - download is for downloading files uploaded in the db (does streaming)
-## - call exposes all registered services (none by default)
-#########################################################################  
+# If you want to enable authentication, uncomment lines with @auth decorator functions. 
 import re
 
 def index():
@@ -59,9 +53,9 @@ def user():
     http://..../[app]/default/user/profile
     http://..../[app]/default/user/retrieve_password
     http://..../[app]/default/user/change_password
-    use #@auth.requires_login()
-        #@auth.requires_membership('group name')
-        #@auth.requires_permission('read','table name',record_id)
+    use @auth.requires_login()
+        @auth.requires_membership('group name')
+        @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
     return dict(form=auth())
@@ -89,7 +83,7 @@ COLUMN_NAMES={'ISBN': 'isbn', 'Author': 'author', 'Title': 'title', 'Illustrator
 COLUMN_AVAIL=['All', 'ISBN', 'Author', 'Title', 'Illustrator', 'Series', 'Publisher', 'Genre', 'Classification', 'Age Level', 'Copyright', 'Edition', 'No. of Copies', 'Awards', 'Language', 'Condition', 'Signed', 'Antique', 'Comments']
 
 #uncomment this line to require login to view books
-##@auth.requires_login()
+#@auth.requires_login()
 def show():
     if request.args:
         try:
@@ -101,7 +95,7 @@ def show():
         raise HTTP(500, "Malformed URL!")
 
 #uncomment this line to require login to search books by keyword
-##@auth.requires_login()
+#@auth.requires_login()
 def kwdsearch():
     """
     performs a keyword search
@@ -146,7 +140,7 @@ def kwdsearch():
     return dict(form=form, results=results, columns=columns, names=COLUMN_NAMES)
 
 #uncomment this line to require login to search books by field
-##@auth.requires_login()    
+#@auth.requires_login()    
 def advsearch():
     response.view = "%s/search.%s" % (request.controller, request.extension)
     return dict(form="Sorry, this function has not yet been implemented.", results=None)

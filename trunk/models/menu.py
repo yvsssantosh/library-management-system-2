@@ -1,9 +1,5 @@
 # coding: utf8
 
-#########################################################################
-## Customize your APP title, subtitle and menus here
-#########################################################################
-
 response.title = T('Library Management System')
 response.subtitle = T('customize me!')
 
@@ -46,38 +42,9 @@ response.menu = [
        URL(request.application, 'default', 'advsearch'), []],
      ]],
     ]
-if auth.has_membership(auth.id_group('admin')):
-    response.menu.append([T('Admin'), False, URL(request.application, 'appadmin', 'index'), []])
-
-
-##########################################
-## this is here to provide shortcuts
-## during development. remove in production 
-##########################################
-
-response.menu_edit=[
-  [T('Edit'), False, URL('admin', 'default', 'design/%s' % request.application),
-   [
-            [T('Controller'), False, 
-             URL('admin', 'default', 'edit/%s/controllers/default.py' \
-                     % request.application)],
-            [T('View'), False, 
-             URL('admin', 'default', 'edit/%s/views/%s' \
-                     % (request.application,response.view))],
-            [T('Layout'), False, 
-             URL('admin', 'default', 'edit/%s/views/layout.html' \
-                     % request.application)],
-            [T('Stylesheet'), False, 
-             URL('admin', 'default', 'edit/%s/static/base.css' \
-                     % request.application)],
-            [T('DB Model'), False, 
-             URL('admin', 'default', 'edit/%s/models/db.py' \
-                     % request.application)],
-            [T('Menu Model'), False, 
-             URL('admin', 'default', 'edit/%s/models/menu.py' \
-                     % request.application)],
-            [T('Database'), False, 
-             URL(request.application, 'appadmin', 'index')],
-            ]
-   ],
-  ]
+#If you're exposing appadmin to administrators only, the below lines are a handy way to make a shortcut to appadmin.
+#Uncomment both lines and tab the third line over if you want this.  Otherwise it can stay as is.
+#If you don't want to expose appadmin to users at all, just comment the third line.
+#if 'auth' in globals():
+#    if auth.has_membership(auth.id_group('admin')):
+response.menu.append([T('Admin'), False, URL(request.application, 'appadmin', 'index'), []])
