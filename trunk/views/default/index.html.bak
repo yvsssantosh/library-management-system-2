@@ -1,3 +1,0 @@
-{{extend 'library_layout.html'}}
-
-{{=message}}

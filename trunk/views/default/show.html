@@ -13,5 +13,6 @@
  </td></tr>
  {{pass}}
  <tr><td colspan="2">{{=A("Edit this book", _href=URL(r=request, f="addoredit", args=book.id))}}</td></tr>
+ <tr><td colspan="2">{{=A("Delete this book", _href=URL(r=request, f="delete", args=book.id))}}</td></tr>
  <tr><td colspan="2">{{=A("Start new search", _href=URL(r=request, f="kwdsearch", args="new"))}}</td></tr>
 </table>

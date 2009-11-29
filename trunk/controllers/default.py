@@ -16,7 +16,7 @@ def index():
     """
     return dict(message=T('Welcome to the Library Management System.'))
     
-
+#@auth.requires_login()
 def addoredit():
     """
     allows adding new books
@@ -33,7 +33,22 @@ def addoredit():
     elif form.errors:
         response.flash = 'Form has errors'
     return dict(form=form)
-
+    
+#@auth.requires_login()
+def delete():
+    if len(request.args) and request.args[0]:
+        form = FORM('Are you sure you want to delete this book?',
+            INPUT(_name='certain', _type='checkbox'),
+            INPUT(_type='submit', _value='OK'))
+        if form.accepts(request.vars, session):
+            if form.vars.certain:
+                del db.books[request.args[0]]
+                redirect(URL(r=request, f='kwdsearch'))
+            else:
+                redirect(URL(r=request, f='show', args=request.args[0]))
+        elif form.errors:
+            redirect(URL(r=request, f='show', args=request.args[0]))
+        return dict(form=form)
 
 def user():
     """
@@ -44,9 +59,9 @@ def user():
     http://..../[app]/default/user/profile
     http://..../[app]/default/user/retrieve_password
     http://..../[app]/default/user/change_password
-    use @auth.requires_login()
-        @auth.requires_membership('group name')
-        @auth.requires_permission('read','table name',record_id)
+    use #@auth.requires_login()
+        #@auth.requires_membership('group name')
+        #@auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
     return dict(form=auth())
@@ -73,6 +88,8 @@ def get_terms(search_string):
 COLUMN_NAMES={'ISBN': 'isbn', 'Author': 'author', 'Title': 'title', 'Illustrator': 'illustrator', 'Series': 'series', 'Publisher': 'publisher', 'Genre': 'genre', 'Classification': 'classification', 'Age Level': 'age_level', 'Copyright': 'copyright', 'Edition': 'edition', 'No. of Copies': 'num_copies', 'Awards': 'awards', 'Language': 'language', 'Condition': 'condition', 'Signed': 'signed', 'Antique': 'antique', 'Comments': 'comments'}
 COLUMN_AVAIL=['All', 'ISBN', 'Author', 'Title', 'Illustrator', 'Series', 'Publisher', 'Genre', 'Classification', 'Age Level', 'Copyright', 'Edition', 'No. of Copies', 'Awards', 'Language', 'Condition', 'Signed', 'Antique', 'Comments']
 
+#uncomment this line to require login to view books
+##@auth.requires_login()
 def show():
     if request.args:
         try:
@@ -83,6 +100,8 @@ def show():
     else:
         raise HTTP(500, "Malformed URL!")
 
+#uncomment this line to require login to search books by keyword
+##@auth.requires_login()
 def kwdsearch():
     """
     performs a keyword search
@@ -125,7 +144,9 @@ def kwdsearch():
     elif form.errors:
         response.flash='Errors were found that require correction!'
     return dict(form=form, results=results, columns=columns, names=COLUMN_NAMES)
-    
+
+#uncomment this line to require login to search books by field
+##@auth.requires_login()    
 def advsearch():
     response.view = "%s/search.%s" % (request.controller, request.extension)
     return dict(form="Sorry, this function has not yet been implemented.", results=None)
