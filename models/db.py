@@ -1,54 +1,34 @@
 # coding: utf8
 
-#########################################################################
-## This scaffolding model makes your app work on Google App Engine too
-#########################################################################
-
-if request.env.web2py_runtime_gae:            # if running on Google App Engine
-    db = DAL('gae')                           # connect to Google BigTable
-    session.connect(request, response, db=db) # and store sessions and tickets there
-    ### or use the following lines to store sessions in Memcache
-    # from gluon.contrib.memdb import MEMDB
-    # from google.appengine.api.memcache import Client
-    # session.connect(request, response, db=MEMDB(Client())
-else:                                         # else use a normal relational database
-    db = DAL('sqlite://storage.sqlite')       # if not, use SQLite or other DB
-## if no need for session
-# session.forget()
-
-#########################################################################
-## Here is sample code if you need for 
-## - email capabilities
-## - authentication (registration, login, logout, ... )
-## - authorization (role based authorization)
-## - services (xml, csv, json, xmlrpc, jsonrpc, amf, rss)
-## - crud actions
-## comment/uncomment as needed
+#db = DAL('postgres://user:pswd@localhost/booksdb') # sample connection string for postgres
+db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
 
 from gluon.tools import *
-auth=Auth(globals(),db)                      # authentication/authorization
-auth.settings.hmac_key='sha512:32b6c31c-d643-408f-8415-e7e07efb91e0'
-auth.settings.actions_disabled.append('register') # block user registration, only admins can add new users
-auth.settings.actions_disabled.append('profile')  # block access to profiles, as they are not required
-auth.settings.actions_disabled.append('retrieve_username') # block access to username retrieval
-auth.settings.actions_disabled.append('retrieve_password') # block access to password retrieval
-auth_table =db.define_table(auth.settings.table_user_name, # custom user table
-    Field('first_name', length=128, default=''),
-    Field('last_name', length=128, default=''),
-    Field('username', length=128, default=''),
-    Field('email', unique=True, length=128, default=''),
-    Field('password', 'password', length=256, default='', readable=False, label='Password'),
-    Field('registration_key', length=128, readable=False, writable=False))
-auth_table.first_name.requires = IS_NOT_EMPTY(error_message=auth.messages.is_empty) #validators req'd by web2py
-auth_table.last_name.requires = IS_NOT_EMPTY(error_message=auth.messages.is_empty)
-auth_table.username.requires = IS_NOT_IN_DB(db, auth_table.username)
-auth_table.password.requires = [IS_STRONG(), CRYPT()]
-auth_table.email.requires = [IS_EMAIL(error_message=auth.messages.invalid_email), IS_NOT_IN_DB(db, auth_table.email)]
-auth.settings.table_user = auth_table # set above table definition as user table for db
-auth.define_tables()                         # creates all needed tables
-crud=Crud(globals(),db)                      # for CRUD helpers using auth
-service=Service(globals())                   # for json, xml, jsonrpc, xmlrpc, amfrpc
+# The below lines are commented out to disable authentication completely.  If you want to turn authentication on,
+# just uncomment them, and then uncomment @auth decorators in appadmin.py and default.py as needed.
+#auth=Auth(globals(),db)                      # authentication/authorization
+#auth.settings.hmac_key='sha512:32b6c31c-d643-408f-8415-e7e07efb91e0'
+#auth.settings.actions_disabled.append('register') # block user registration, only admins can add new users
+#auth.settings.actions_disabled.append('profile')  # block access to profiles, as they are not required
+#auth.settings.actions_disabled.append('retrieve_username') # block access to username retrieval
+#auth.settings.actions_disabled.append('retrieve_password') # block access to password retrieval
+#auth_table =db.define_table(auth.settings.table_user_name, # custom user table
+#    Field('first_name', length=128, default=''),
+#    Field('last_name', length=128, default=''),
+#    Field('username', length=128, default=''),
+#    Field('email', unique=True, length=128, default=''),
+#    Field('password', 'password', length=256, default='', readable=False, label='Password'),
+#    Field('registration_key', length=128, readable=False, writable=False))
+#auth_table.first_name.requires = IS_NOT_EMPTY(error_message=auth.messages.is_empty) #validators req'd by web2py
+#auth_table.last_name.requires = IS_NOT_EMPTY(error_message=auth.messages.is_empty)
+#auth_table.username.requires = IS_NOT_IN_DB(db, auth_table.username)
+#auth_table.password.requires = [IS_STRONG(), CRYPT()]
+#auth_table.email.requires = [IS_EMAIL(error_message=auth.messages.invalid_email), IS_NOT_IN_DB(db, auth_table.email)]
+#auth.settings.table_user = auth_table # set above table definition as user table for db
+#auth.define_tables()                         # creates all needed tables
+#crud=Crud(globals(),db)                      # for CRUD helpers using auth
 
+# the below are for people that use internal mail servers and want to set up email-based auth.
 # crud.settings.auth=auth                      # enforces authorization on crud
 # mail=Mail()                                  # mailer
 # mail.settings.server='smtp.gmail.com:587'    # your SMTP server

@@ -1,3 +1,4 @@
+#if you want to enable authentication, go to line 105 of this file.
 # coding: utf8
 
 # ##########################################################
@@ -35,8 +36,8 @@ if not gluon.fileutils.check_credentials(request):
 
 ignore_rw = True
 response.view = 'appadmin.html'
-response.menu = [[T('db'), False, URL(r=request, f='index')],
-                 [T('state'), False, URL(r=request, f='state')],
+response.menu = [[T('Database'), False, URL(r=request, f='index')],
+                 [T('App State'), False, URL(r=request, f='state')],
                  [T('Index'), False, URL(r=request, c='default', f='index')]]
 
 # ##########################################################
