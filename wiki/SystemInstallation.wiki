@@ -1,0 +1,27 @@
+#summary How to install the Library Management System
+#labels Featured
+
+You can install the LMS in one of two ways:  From SVN or from a w2p package.
+
+You start by downloading web2py and unzipping it somewhere.  After that, run it with this command from your command prompt (you must be in the directory where web2py was unzipped to):
+{{{
+python web2py.py
+}}}
+You'll be prompted to set an adminstrator password.  After doing so, you can run web2py using this command to reuse your original admin password:
+{{{
+python web2py.py -a <recycle>
+}}}
+
+= From W2P =
+
+ # Download a prepackaged W2P file from this site.
+ # Login to web2py's admin site and click "browse" under "upload existing application".
+ # Browse to the W2P file.
+ # Give the new app a name, like library.
+ # Click Install.
+
+= From SVN =
+
+ # Checkout the source from the SVN trunk to the applications folder of your web2py.
+ # The folder you check out to can only have letters in its name.
+ # Refresh the web2py site page, and you should see LMS listed by the folder name you checked out to.
