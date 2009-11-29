@@ -1,0 +1,127 @@
+body
+{
+height: 100%;
+}
+
+a:link, a:visited
+{
+color: #974000;
+background-color: #E96300;
+}
+
+a:hover, a:active
+{
+color: #E96300;
+background-color: #974000;
+}
+
+/* Portions copied from Floatutorial's Liquid Two-column Design at css.maxdesign.co.au */
+
+#container
+{
+width: 95%;
+height: 100%;
+margin: 10px auto;
+background-color: #009181;
+color: #333;
+border: 1px solid gray;
+line-height: 130%;
+font-family: Verdana, Arial, Helvetica;
+font-size: 95%;
+}
+
+#top
+{
+padding: .5em;
+background-color: #063A9B;
+color: white;
+border-bottom: 1px solid gray;
+}
+
+#top h1
+{
+padding: 0;
+margin: 0;
+}
+
+#leftnav
+{
+float: left;
+width: 160px;
+margin: 0;
+padding: 1em;
+}
+
+#colcontent
+{
+margin-left: 200px;
+padding: 1em;
+overflow: auto;
+}
+
+#footer
+{
+clear: both;
+margin: 0;
+padding: .5em;
+color: white;
+background-color: #063A9B;
+border-top: 1px solid gray;
+}
+
+#leftnav p { margin: 0 0 1em 0; }
+#colcontent h2 { margin: 0 0 .5em 0; }
+
+/* Copied from Listutorial's Nested Lists at css.maxdesign.co.au */
+
+#leftnav ul
+{
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+#leftnav a
+{
+display: block;
+color: #974000;
+background-color: #E96300;
+width: 9em;
+padding: 3px 12px 3px 8px;
+text-decoration: none;
+border-bottom: 1px solid #fff;
+font-weight: bold;
+}
+
+#leftnav a:hover
+{
+background-color: #974000;
+color: #E96300;
+}
+
+#leftnav li li a
+{
+display: block;
+background-color: #F48B3D;
+width: 9em;
+padding: 3px 3px 3px 17px;
+text-decoration: none;
+border-bottom: 1px solid #fff;
+font-weight: normal;
+}
+
+/* Result table definitions */
+
+#colcontent th.result,
+#colcontent td.result
+{
+border-top: 1px solid black;
+border-bottom: 1px solid black;
+font-size: x-small;
+padding: none;
+}
+
+#colcontent th.result
+{
+background-color: #063A9B;
+}

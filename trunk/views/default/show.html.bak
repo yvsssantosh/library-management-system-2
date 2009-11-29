@@ -1,0 +1,16 @@
+{{extend 'layout.html'}}
+<table>
+ {{for n in names:}}
+ <tr><td>{{=n}}:  </td>
+ <td>
+ {{if cols[n] in ['signed', 'antique']:}}
+  {{if book[cols[n]]:}}
+   {{=XML('&#x2713;')}}
+  {{pass}}
+ {{else:}}
+  {{=book[cols[n]]}}
+ {{pass}}
+ </td></tr>
+ {{pass}}
+ <tr><td colspan="2">{{=A("Edit this book", _href=URL(r=request, f="addoredit", args=book.id))}}
+</table>

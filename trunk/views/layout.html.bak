@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang=
+"{{=T.accepted_language or 'en'}}" lang="{{=T.accepted_language or 'en'}}">
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 14 February 2006), see www.w3.org" />
+    <title>
+      {{=response.title or request.application}}
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    {{response.files.append(URL(request.application,'static','library.css'))}}
+    {{include 'web2py_ajax.html'}}
+    <div id="container">
+      <div id="top">
+        <h1>
+          {{=response.title or request.application}}
+        </h1>
+      </div>
+      <div id="leftnav">
+            {{if response.menu:}}
+            {{=MENU(response.menu)}}
+            {{pass}}
+            {{if response.menu_auth:}}
+            {{=MENU(response.menu_auth)}}
+            {{pass}}
+            <br />
+      </div>
+      <div id="content">
+        <div class="flash">
+          {{=response.flash or ''}}
+        </div>
+        {{include}}
+      </div>
+      <div id="footer">
+        Copyright 2009 by Jon Prater.  Powered by <a href="http://www.web2py.com/">web2py</a><br/>
+        {{import datetime}}
+        Server time:  {{=datetime.datetime.now().strftime('%m/%d/%Y %H:%M:%S')}}
+      </div>
+    </div>
+  </body>
+</html>
