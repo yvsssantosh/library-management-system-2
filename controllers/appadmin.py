@@ -35,10 +35,9 @@ if not gluon.fileutils.check_credentials(request):
 
 ignore_rw = True
 response.view = 'appadmin.html'
-response.menu = [[T('design'), False, URL('admin', 'default', 'design',
-                 args=[request.application])], [T('db'), False,
-                 URL(r=request, f='index')], [T('state'), False,
-                 URL(r=request, f='state')]]
+response.menu = [[T('db'), False, URL(r=request, f='index')],
+                 [T('state'), False, URL(r=request, f='state')],
+                 [T('Index'), False, URL(r=request, c='default', f='index')]]
 
 # ##########################################################
 # ## auxiliary functions
@@ -102,13 +101,16 @@ def query_by_table_type(tablename,db=db,request=request):
         qry = '%s.%s.id>0' % tuple(request.args[:2])
     return qry
 
-
+# Any function below this that is decorated with requires_membership('admin')
+# must have a user logged in with membership in the admin group to perform.
+# Your database must have the admin group stored in table_group before you
+# enable this!
 
 # ##########################################################
 # ## list all databases and tables
 # ###########################################################
 
-
+#@auth.requires_membership('admin')
 def index():
     return dict(databases=databases)
 
@@ -117,7 +119,7 @@ def index():
 # ## insert a new record
 # ###########################################################
 
-
+#@auth.requires_membership('admin')
 def insert():
     (db, table) = get_table(request)
     form = SQLFORM(db[table], ignore_rw=ignore_rw)
@@ -130,12 +132,13 @@ def insert():
 # ## list all records in table and insert new record
 # ###########################################################
 
-
+#@auth.requires_membership('admin')
 def download():
     import os
     db = get_database(request)
     return response.download(request,db)
 
+#@auth.requires_membership('admin')
 def csv():
     import gluon.contenttype
     response.headers['Content-Type'] = \
@@ -148,10 +151,10 @@ def csv():
          % tuple(request.vars.query.split('.')[:2])
     return str(db(query).select())
 
-
 def import_csv(table, file):
     table.import_from_csv_file(file)
 
+#@auth.requires_membership('admin')
 def select():
     import re
     db = get_database(request)
@@ -243,7 +246,7 @@ def select():
 # ## edit delete one record
 # ###########################################################
 
-
+#@auth.requires_membership('admin')
 def update():
     (db, table) = get_table(request)
     keyed = hasattr(db[table],'_primarykey')
@@ -295,8 +298,6 @@ def update():
 # ## get global variables
 # ###########################################################
 
-
+#@auth.requires_membership('admin')
 def state():
     return dict()
-
-

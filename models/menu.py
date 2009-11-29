@@ -46,6 +46,8 @@ response.menu = [
        URL(request.application, 'default', 'advsearch'), []],
      ]],
     ]
+if auth.has_membership(auth.id_group('admin')):
+    response.menu.append([T('Admin'), False, URL(request.application, 'appadmin', 'index'), []])
 
 
 ##########################################
