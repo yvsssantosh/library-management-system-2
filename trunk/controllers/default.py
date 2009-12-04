@@ -79,8 +79,8 @@ def get_terms(search_string):
                     terms.append(('include', t))
     return terms
 
-COLUMN_NAMES={'ISBN': 'isbn', 'Author': 'author', 'Title': 'title', 'Illustrator': 'illustrator', 'Series': 'series', 'Publisher': 'publisher', 'Genre': 'genre', 'Classification': 'classification', 'Age Level': 'age_level', 'Copyright': 'copyright', 'Edition': 'edition', 'No. of Copies': 'num_copies', 'Awards': 'awards', 'Language': 'language', 'Condition': 'condition', 'Signed': 'signed', 'Antique': 'antique', 'Comments': 'comments'}
-COLUMN_AVAIL=['All', 'ISBN', 'Author', 'Title', 'Illustrator', 'Series', 'Publisher', 'Genre', 'Classification', 'Age Level', 'Copyright', 'Edition', 'No. of Copies', 'Awards', 'Language', 'Condition', 'Signed', 'Antique', 'Comments']
+COLUMN_NAMES={'ISBN': 'isbn', 'Author': 'author', 'Title': 'title', 'Illustrator': 'illustrator', 'Series': 'series', 'Place in Series': 'place', 'Publisher': 'publisher', 'Genre': 'genre', 'Classification': 'classification', 'Age Level': 'age_level', 'Copyright': 'copyright', 'Edition': 'edition', 'No. of Copies': 'num_copies', 'Awards': 'awards', 'Language': 'language', 'Condition': 'condition', 'Signed': 'signed', 'Antique': 'antique', 'Comments': 'comments'}
+COLUMN_AVAIL=['All', 'ISBN', 'Author', 'Title', 'Illustrator', 'Series', 'Place in Series', 'Publisher', 'Genre', 'Classification', 'Age Level', 'Copyright', 'Edition', 'No. of Copies', 'Awards', 'Language', 'Condition', 'Signed', 'Antique', 'Comments']
 
 #uncomment this line to require login to view books
 #@auth.requires_login()
