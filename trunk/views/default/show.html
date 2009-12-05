@@ -16,3 +16,14 @@
  <tr><td colspan="2">{{=A("Delete this book", _href=URL(r=request, f="delete", args=book.id))}}</td></tr>
  <tr><td colspan="2">{{=A("Start new search", _href=URL(r=request, f="kwdsearch", args="new"))}}</td></tr>
 </table>
+<table>
+ {{if loans:}}
+ <tr><th>Name of Person Loaned to</th><th>Date of Loan</th></tr>
+ {{for loan in loans:}}
+  {{=TR(loan.name,loan.lndate,
+    A('Edit', _href=URL(r=request, f='addeditloan', args=[book.id, loan.id])),
+    A('Delete', _href=URL(r=request, f='delloan', args=[loan.id])))}}
+ {{pass}}
+ {{pass}}
+ <tr><td colspan="2">{{=A('Add New Loan', _href=URL(r=request, f='addeditloan', args=book.id))}}</td></tr>
+</table>

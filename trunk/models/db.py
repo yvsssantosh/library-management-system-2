@@ -1,7 +1,7 @@
 # coding: utf8
 
-#db = DAL('postgres://user:pswd@localhost/booksdb') # sample connection string for postgres
-db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
+db = DAL('postgres://libuser:LibPwd1@localhost/lmsweb') # sample connection string for postgres
+#db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
 
 from gluon.tools import *
 # The below lines are commented out to disable authentication completely.  If you want to turn authentication on,
@@ -103,7 +103,7 @@ db.define_table("loans",
     Field("id_books", db.books),
     Field("name", "string", length=50, notnull=True, default=None),
     Field("lndate", "date", label='Date of Loan:', notnull=True, default=datetime.now()),
-    Field("comments", "text", default=None))
+    Field("comments", "text", default=None, notnull=False))
 
 # define relation between loans and books
-db.loans.id_books.requires=IS_IN_DB( db, 'books.id', ' %(isbn)s %(author)s %(title)s')
+db.loans.id_books.requires=IS_IN_DB(db, 'books.id', '%(author)s %(title)s')

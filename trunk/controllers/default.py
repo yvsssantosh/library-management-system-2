@@ -88,11 +88,44 @@ def show():
     if request.args:
         try:
             book = db.books[request.args[0]]
-            return dict(book=book, cols=COLUMN_NAMES, names=COLUMN_AVAIL[1:])
+            loans = book.loans.select()
+            return dict(book=book, loans=loans, cols=COLUMN_NAMES, names=COLUMN_AVAIL[1:])
         except:
             raise HTTP(404, "Book with id %d not available!" % request.args[0])
     else:
         raise HTTP(500, "Malformed URL!")
+        
+def addeditloan():
+    if request.args:
+        book = db.books[request.args[0]]
+        if len(request.args) > 1:
+            loan = db.loans[request.args[1]]
+            form = SQLFORM(db.loans, loan, showid=False)
+            return dict(form=form)
+        else:
+            form = SQLFORM(db.loans)
+            form.vars.id_books = book.id
+        if form.accepts(request.vars, session):
+            redirect(URL(r=request, f="show", args=request.args[0]))
+        elif form.errors:
+            response.flash = 'Form has errors'
+        return dict(form=form, bkid = book.id)
+    else:
+        raise HTTP(500, "Malformed URL!")
+        
+def delloan():
+    if len(request.args) and request.args[0]:
+        book_id = db.loans[request.args[0]].id_books
+        form = FORM('Are you sure you want to delete this loan?',
+            INPUT(_name='certain', _type='checkbox'),
+            INPUT(_type='submit', _value='OK'))
+        if form.accepts(request.vars, session):
+            if form.vars.certain:
+                del db.loans[request.args[0]]
+            redirect(URL(r=request, f='show', args=book_id))
+        elif form.errors:
+            redirect(URL(r=request, f='show', args=book_id))
+        return dict(form=form)
 
 #uncomment this line to require login to search books by keyword
 #@auth.requires_login()
