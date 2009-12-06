@@ -16,9 +16,9 @@ def addoredit():
     allows adding new books
     """
     if request.args:
-        form = SQLFORM(db.books, db.books[request.args[0]], showid=False)
+        form = SQLFORM(db.books, db.books[request.args[0]], showid=False, submit_button='Save')
     else:
-        form = SQLFORM(db.books)
+        form = SQLFORM(db.books, submit_button='Add')
     if form.accepts(request.vars, session):
         if request.args:
             redirect(URL(r=request, f="show", args=request.args[0]))
@@ -100,16 +100,16 @@ def addeditloan():
         book = db.books[request.args[0]]
         if len(request.args) > 1:
             loan = db.loans[request.args[1]]
-            form = SQLFORM(db.loans, loan, showid=False)
-            return dict(form=form)
+            form = SQLFORM(db.loans, loan, fields=['name', 'lndate', 'comments'], showid=False, submit_button='Save')
+            return dict(form=form, bkid=book.id)
         else:
-            form = SQLFORM(db.loans)
+            form = SQLFORM(db.loans, fields=['name', 'lndate', 'comments'], submit_button='Add')
             form.vars.id_books = book.id
         if form.accepts(request.vars, session):
             redirect(URL(r=request, f="show", args=request.args[0]))
         elif form.errors:
             response.flash = 'Form has errors'
-        return dict(form=form, bkid = book.id)
+        return dict(form=form, bkid=book.id)
     else:
         raise HTTP(500, "Malformed URL!")
         

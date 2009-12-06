@@ -1,7 +1,7 @@
 # coding: utf8
 
-db = DAL('postgres://libuser:LibPwd1@localhost/lmsweb') # sample connection string for postgres
-#db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
+#db = DAL('postgres://libuser:pswd@localhost/bookdb') # sample connection string for postgres
+db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
 
 from gluon.tools import *
 # The below lines are commented out to disable authentication completely.  If you want to turn authentication on,
