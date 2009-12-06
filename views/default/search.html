@@ -4,8 +4,9 @@
   <tr>
    <th></th>
    {{for c in columns:}}
-    <th class="result">{{=c}}</td>
+    <th class="result">{{=c}}</th>
    {{pass}}
+   <th class="result">Loaned</th>
   </tr>
    {{for r in results:}}
    <tr>
@@ -21,6 +22,11 @@
       <td class="result">{{=r[names[c]]}}</td>
      {{pass}}
     {{pass}}
+     <td class="result">
+      {{if r.loans.select():}}
+      {{=XML('&#x2714;')}}
+      {{pass}}
+     </td>
    </tr>
    {{pass}}
 </table>

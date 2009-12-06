@@ -18,9 +18,9 @@
 </table>
 <table>
  {{if loans:}}
- <tr><th>Name of Person Loaned to</th><th>Date of Loan</th></tr>
+ <tr><th>Name of Person Loaned to</th><th>Date of Loan</th><th>Comments</th></tr>
  {{for loan in loans:}}
-  {{=TR(loan.name,loan.lndate,
+  {{=TR(loan.name,loan.lndate,loan.comments,
     A('Edit', _href=URL(r=request, f='addeditloan', args=[book.id, loan.id])),
     A('Delete', _href=URL(r=request, f='delloan', args=[loan.id])))}}
  {{pass}}

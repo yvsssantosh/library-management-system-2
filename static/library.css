@@ -112,6 +112,14 @@ font-weight: normal;
 
 /* Result table definitions */
 
+table {
+border-collapse:collapse;
+}
+
+th, td {
+padding-left: 1em;
+}
+
 #colcontent th.result,
 #colcontent td.result
 {
