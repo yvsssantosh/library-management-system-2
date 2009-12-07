@@ -30,4 +30,4 @@ Once that's done, look in appadmin.py and default.py, the two controller files f
 
 == Appearance ==
 
-Feel free to play with what the LMS looks like.  Everything in terms of appearance is defined via CSS styles in either library.css (listed under 'Static' in the admin view) or layout.html (listed under 'Views').
+Feel free to play with what the LMS looks like.  Everything in terms of appearance is defined via CSS styles in either library.css (listed under 'Static' in the admin view).  If you don't mind messing with Python and HTML, you can restructure LMS's basic appearance by changing layout.html under the Views.  This is the main layout for all LMS pages.
