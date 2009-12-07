@@ -1,0 +1,33 @@
+#summary Getting started with the Library Management System
+#labels Featured
+
+= Getting Started =
+
+So, you've downloaded the Library Management System and installed it into web2py.  Now, what do you do with it? :)
+
+== Using the LMS ==
+
+The left-hand navigation menu should be pretty self-explanatory, and it exposes the top-level functionality of the LMS:
+ * Index leads you back to the main page of the LMS, where you start out.
+ * Add New Books lets you do just that.
+ * The Search menu entry itself doesn't go anywhere, but the two sub items underneath point to the two search modules of the LMS:  Keyword searching or Advanced search.  Advanced mode is not currently implemented, sadly.
+ * Admin takes you into the Application Admin area of the LMS, where you can more directly mess around with stuff in the database.  Basic CRUD functions for every table in the database are here (insert, select, update, delete).
+
+Within AppAdmin, the menu changes:
+ * Database exposes CRUD functions for every table in the underlying LMS database.
+ * State shows the current state of LMS, including all internal system variables (see the web2py manual for details on what these mean).
+ * Index takes you back to the LMS main index.
+
+== Database settings ==
+
+When you first install the Library Management System, its default settings will create a sqlite database.  If you have a large book collection to manage (more than a few hundred), you'll want to go with a full-scale database server.  MySQL or Postgres should cover most anybody's needs, but web2py also supports Firebird, Microsoft SQL, and Oracle.
+
+== User authentication and security ==
+
+If you plan to set this up for a multi-user environment and you expect to have access control, web2py provides a convenient authentication and authorization framework.  The commented lines near the top of db.py that start with 'auth' lay the groundwork for implementing authentication in LMS.  Just uncomment those lines, and the auth framework will do the rest, including creating the necessary tables in the database.  This also exposes those tables to Appadmin.
+
+Once that's done, look in appadmin.py and default.py, the two controller files for LMS.  You'll find auth decorators (method calls starting with @auth) all over, which link the various actions of the controllers to authentication requirements.  They're commented out right now to stop them from requiring login to use LMS.  Just uncomment the decorators for whatever functions you want to secure.  But before you do any of that, make sure you've got at least one account created already, especially if you do anything with the decorators in appadmin.  Those lock Appadmin's functionality (as described above) to members of a group named 'admin'.  Before activating those, make sure to create a group called admin and give it at least one member.  You can do all that from the Appadmin interface for the tables db.auth_user, db.auth_group, and db.auth_membership.  A more unified interface is planned to do this in the future.
+
+== Appearance ==
+
+Feel free to play with what the LMS looks like.  Everything in terms of appearance is defined via CSS styles in either library.css (listed under 'Static' in the admin view) or layout.html (listed under 'Views').
