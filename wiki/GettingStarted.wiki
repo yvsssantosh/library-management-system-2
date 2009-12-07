@@ -11,9 +11,9 @@ The left-hand navigation menu should be pretty self-explanatory, and it exposes 
  * Index leads you back to the main page of the LMS, where you start out.
  * Add New Books lets you do just that.
  * The Search menu entry itself doesn't go anywhere, but the two sub items underneath point to the two search modules of the LMS:  Keyword searching or Advanced search.  Advanced mode is not currently implemented, sadly.
- * Admin takes you into the Application Admin area of the LMS, where you can more directly mess around with stuff in the database.  Basic CRUD functions for every table in the database are here (insert, select, update, delete).
+ * Admin takes you into the Application Admin (or Appadmin) area of the LMS, where you can more directly mess around with stuff in the database.  Basic CRUD functions for every table in the database are here (insert, select, update, delete).
 
-Within AppAdmin, the menu changes:
+Within Appadmin, the menu changes:
  * Database exposes CRUD functions for every table in the underlying LMS database.
  * State shows the current state of LMS, including all internal system variables (see the web2py manual for details on what these mean).
  * Index takes you back to the LMS main index.
