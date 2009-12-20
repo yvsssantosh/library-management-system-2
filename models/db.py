@@ -1,6 +1,6 @@
 # coding: utf8
 
-#db = DAL('postgres://libuser:pswd@localhost/bookdb') # sample connection string for postgres
+#db = DAL('postgres://libuser:pswd@localhost/booksdb') # sample connection string for postgres
 db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
 
 from gluon.tools import *
