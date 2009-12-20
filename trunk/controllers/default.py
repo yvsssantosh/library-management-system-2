@@ -2,6 +2,31 @@
 
 # If you want to enable authentication, uncomment lines with @auth decorator functions. 
 import re
+import amazonproduct
+
+_aws_id = '0YBWVTC8EB181VVJ2XG2'
+_aws_key = 'nUr+89Q78Uwf8N38zdLVMWTx3PIYS8wQRoluP3b2'
+_aws_ns = {'aws': 'http://webservices.amazon.com/AWSECommerceService/2009-10-01'}
+
+_aws_api = amazonproduct.API(_aws_id, _aws_key, locale='us')
+
+def item_search_by_keyword(keyword):
+    nodes = _aws_api.item_search('Books', Keywords=keyword, ResponseGroup='ItemAttributes')
+    books = []
+    for book in nodes.xpath('//aws:Items/aws:Item', namespaces=_aws_ns):
+        books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, book.ItemAttributes.ISBN))
+    return books
+
+def item_lookup(isbn):
+    newisbn = ''.join(isbn.split('-'))
+    node = _aws_api.item_lookup(newisbn, IdType='ISBN', SearchIndex='Books', ResponseGroup='ItemAttributes')
+    nodeatts = node.xpath('//aws:ItemAttributes', namespaces=_aws_ns)
+    book = {'author': nodeatts[0].Author}
+    book['title'] = nodeatts[0].Title
+    book['isbn'] = nodeatts[0].ISBN
+    book['publisher'] = nodeatts[0].Publisher
+    book['copyright'] = nodeatts[0].PublicationDate.pyval.split('-')[0]
+    return book
 
 def index():
     """
@@ -17,8 +42,25 @@ def addoredit():
     """
     if request.args:
         form = SQLFORM(db.books, db.books[request.args[0]], showid=False, submit_button='Save')
+        isbnform=None
+        atform=None
     else:
         form = SQLFORM(db.books, submit_button='Add')
+        isbnform = FORM('Enter ISBN Here',
+            INPUT(_name='isbn', _type='text'),
+            INPUT(_type='submit', _value='Lookup'))
+        #atform = FORM('Search by Author and Title Here',
+        #    INPUT(_name='author', _type='text'),
+        #    INPUT(_name='title', _type='text'),
+        #    INPUT(_type='submit', _value='Search'))
+        atform=None
+        if isbnform.accepts(request.vars, session):
+            book = item_lookup(isbnform.vars.isbn)
+            form.vars.isbn = isbnform.vars.isbn
+            form.vars.author = book['author']
+            form.vars.title = book['title']
+            form.vars.publisher = book['publisher']
+            form.vars.copyright = book['copyright']
     if form.accepts(request.vars, session):
         if request.args:
             redirect(URL(r=request, f="show", args=request.args[0]))
@@ -26,7 +68,7 @@ def addoredit():
             response.flash = 'Book saved'
     elif form.errors:
         response.flash = 'Form has errors'
-    return dict(form=form)
+    return dict(form=form, isbnform=isbnform, atform=atform)
     
 #@auth.requires_login()
 def delete():
