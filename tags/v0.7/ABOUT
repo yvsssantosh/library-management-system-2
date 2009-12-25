@@ -1,0 +1,3 @@
+Library Management System 2.0
+Developed with web2py.
+Authentication can be enabled by uncommenting auth lines in db.py and then uncommenting appropriate decorators in appadmin.py and/or default.py.

@@ -1,0 +1,29 @@
+{{extend 'layout.html'}}
+<table>
+ {{for n in names:}}
+ <tr><td>{{=n}}:  </td>
+ <td>
+ {{if cols[n] in ['signed', 'antique']:}}
+  {{if book[cols[n]]:}}
+   {{=XML('&#x2713;')}}
+  {{pass}}
+ {{else:}}
+  {{=book[cols[n]]}}
+ {{pass}}
+ </td></tr>
+ {{pass}}
+ <tr><td colspan="2">{{=A("Edit this book", _href=URL(r=request, f="addoredit", args=book.id))}}</td></tr>
+ <tr><td colspan="2">{{=A("Delete this book", _href=URL(r=request, f="delete", args=book.id))}}</td></tr>
+ <tr><td colspan="2">{{=A("Start new search", _href=URL(r=request, f="kwdsearch", args="new"))}}</td></tr>
+</table>
+<table>
+ {{if loans:}}
+ <tr><th>Name of Person Loaned to</th><th>Date of Loan</th><th>Comments</th></tr>
+ {{for loan in loans:}}
+  {{=TR(loan.name,loan.lndate,loan.comments,
+    A('Edit', _href=URL(r=request, f='addeditloan', args=[book.id, loan.id])),
+    A('Delete', _href=URL(r=request, f='delloan', args=[loan.id])))}}
+ {{pass}}
+ {{pass}}
+ <tr><td colspan="2">{{=A('Add New Loan', _href=URL(r=request, f='addeditloan', args=book.id))}}</td></tr>
+</table>

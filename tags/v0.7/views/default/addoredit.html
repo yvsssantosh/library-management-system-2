@@ -1,0 +1,27 @@
+{{extend 'layout.html'}}
+<script language="javascript">
+function setisbn(isbnlkup) {
+    var isbn = document.getElementsByName("isbnform")[0].isbn;
+    if(typeof(isbnlkup) != "string") {
+        isbnstr = isbnlkup.toString();
+        while (isbnstr.length < 10) {
+            isbnstr = '0' + isbnstr;
+        }
+    } else {isbnstr = isbnlkup;}
+    isbn.value = isbnstr;
+}
+</script>
+<p><h3>Enter New Books</h3></p>
+{{=form}}
+<p><h3>Amazon Lookup</h3></p>
+<p>{{=isbnform}}</p>
+<p><h3>Amazon Search by Author/Title/Publication Date</h3></p>
+<p>{{=atform}}</p>
+{{if booklist:}}
+    <table>
+        <tr><th class="results">ISBN</th><th class="results">Author</th><th class="results">Title</th></tr>
+        {{for book in booklist:}}
+            <tr onclick="setisbn('{{=book[2]}}')"><td class="results">{{=book[2]}}</td><td class="results">{{=book[0]}}</td><td class="results">{{=book[1]}}</td></tr>
+        {{pass}}
+    </table>
+{{pass}}
