@@ -1,0 +1,12 @@
+==Release 0.7==
+===Changes===
+ # Feature Added:  Search Amazon for book information by author, title, and publication year
+ # Feature Added:  Look up books by ISBN from Amazon
+ # Feature Added:  Add/edit/delete loan information
+===Known Issues===
+ * None
+
+==Release 0.5==
+===Changes===
+ # First major release
+ # Features Added:  Add/edit/delete/view books, search books by keyword
