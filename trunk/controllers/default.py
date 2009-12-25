@@ -10,20 +10,37 @@ _aws_ns = {'aws': 'http://webservices.amazon.com/AWSECommerceService/2009-10-01'
 
 _aws_api = amazonproduct.API(_aws_id, _aws_key, locale='us')
 
-def item_search_by_keyword(keyword):
-    nodes = _aws_api.item_search('Books', Keywords=keyword, ResponseGroup='ItemAttributes')
-    books = []
-    for book in nodes.xpath('//aws:Items/aws:Item', namespaces=_aws_ns):
-        books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, book.ItemAttributes.ISBN))
-    return books
+def book_search(kwds):
+    if len(kwds):
+        terms = []
+        for k in kwds:
+            terms.append(k + ':' + kwds[k])
+        pwrsrch = ' and '.join(terms)
+        nodes = _aws_api.item_search('Books', ResponseGroup='ItemAttributes', Power=pwrsrch)
+        books = []
+        for book in nodes.xpath('//aws:Items/aws:Item', namespaces=_aws_ns):
+            try:
+                books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, "%010d" % book.ItemAttributes.ISBN.pyval))
+            except:
+                books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, 'ASIN:%s' % book.ASIN))
+        return books
+    else:
+        return None
 
 def item_lookup(isbn):
-    newisbn = ''.join(isbn.split('-'))
-    node = _aws_api.item_lookup(newisbn, IdType='ISBN', SearchIndex='Books', ResponseGroup='ItemAttributes')
+    if isbn.startswith('ASIN:'):
+        asin = isbn.split(':')[1]
+        node = _aws_api.item_lookup(asin, ResponseGroup='ItemAttributes')
+    else:
+        newisbn = ''.join(isbn.split('-'))
+        node = _aws_api.item_lookup(newisbn, IdType='ISBN', SearchIndex='Books', ResponseGroup='ItemAttributes')
     nodeatts = node.xpath('//aws:ItemAttributes', namespaces=_aws_ns)
     book = {'author': nodeatts[0].Author}
     book['title'] = nodeatts[0].Title
-    book['isbn'] = nodeatts[0].ISBN
+    try:
+        book['isbn'] = nodeatts[0].ISBN
+    except:
+        book['isbn'] = ''
     book['publisher'] = nodeatts[0].Publisher
     book['copyright'] = nodeatts[0].PublicationDate.pyval.split('-')[0]
     return book
@@ -44,23 +61,34 @@ def addoredit():
         form = SQLFORM(db.books, db.books[request.args[0]], showid=False, submit_button='Save')
         isbnform=None
         atform=None
+        booklist=None
     else:
+        kwds={'nothin': 'nothin'}
         form = SQLFORM(db.books, submit_button='Add')
-        isbnform = FORM('Enter ISBN Here',
+        isbnform = FORM(TABLE(TR('Enter ISBN:',
             INPUT(_name='isbn', _type='text'),
-            INPUT(_type='submit', _value='Lookup'))
-        #atform = FORM('Search by Author and Title Here',
-        #    INPUT(_name='author', _type='text'),
-        #    INPUT(_name='title', _type='text'),
-        #    INPUT(_type='submit', _value='Search'))
-        atform=None
-        if isbnform.accepts(request.vars, session):
+            INPUT(_type='submit', _value='Lookup'))), _name='isbnform')
+        atform = FORM(TABLE(TR('Author:', INPUT(_name='author', _type='text')),
+            TR('Title:', INPUT(_name='title', _type='text')),
+            TR('Copyright:', INPUT(_name='pubdate', _type='text')),
+            TR(TD(INPUT(_type='submit', _value='Search'), _colspan=2))))
+        booklist=None
+        if isbnform.accepts(request.vars, session, formname='isbnform'):
             book = item_lookup(isbnform.vars.isbn)
-            form.vars.isbn = isbnform.vars.isbn
+            form.vars.isbn = book['isbn']
             form.vars.author = book['author']
             form.vars.title = book['title']
             form.vars.publisher = book['publisher']
             form.vars.copyright = book['copyright']
+        if atform.accepts(request.vars, session, formname='atform'):
+            kwds = {}
+            if atform.vars.author:
+                kwds['author'] = atform.vars.author
+            if atform.vars.title:
+                kwds['title'] = atform.vars.title
+            if atform.vars.pubdate:
+                kwds['pubdate'] = atform.vars.pubdate
+            booklist = book_search(kwds)
     if form.accepts(request.vars, session):
         if request.args:
             redirect(URL(r=request, f="show", args=request.args[0]))
@@ -68,7 +96,7 @@ def addoredit():
             response.flash = 'Book saved'
     elif form.errors:
         response.flash = 'Form has errors'
-    return dict(form=form, isbnform=isbnform, atform=atform)
+    return dict(form=form, isbnform=isbnform, atform=atform, booklist=booklist)
     
 #@auth.requires_login()
 def delete():
