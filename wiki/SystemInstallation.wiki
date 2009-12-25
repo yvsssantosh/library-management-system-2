@@ -1,6 +1,18 @@
 #summary How to install the Library Management System
 #labels Featured
 
+==Minimum Requirements==
+
+ # Python 2.6
+ # A database engine and the appropriate Python adapter for it
+ # web2py 1.74.3
+
+==Recommended==
+
+ # A web server (such as Apache)
+ # A version of mod_wsgi appropriate for your web server
+ # lxml and python-amazon-product-api Python modules
+
 You can install the LMS in one of two ways:  From SVN or from a w2p package.
 
 You start by downloading web2py and unzipping it somewhere.  After that, run it with this command from your command prompt (you must be in the directory where web2py was unzipped to):
