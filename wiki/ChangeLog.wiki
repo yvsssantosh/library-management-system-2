@@ -1,3 +1,9 @@
+==Release 0.7.1==
+===Changes===
+ # Fix:  Aesthetic.  Interface was displaying at full length scrollable.  Improved to create scrolling viewport for content pane only.  No scrolling elsewhere.
+===Known Issues===
+ * None
+
 ==Release 0.7==
 ===Changes===
  # Feature Added:  Search Amazon for book information by author, title, and publication year
