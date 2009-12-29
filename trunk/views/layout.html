@@ -13,6 +13,15 @@
   <body>
     {{response.files.append(URL(request.application,'static','library.css'))}}
     {{include 'web2py_ajax.html'}}
+    <script type="text/javascript">
+        jQuery(document).ready(function(event) {
+          var screenheight = $(window).height() - 25;
+          jQuery("body").height(screenheight);
+          var contentheight = (screenheight*0.9) - (jQuery("#top").height() + jQuery("#footer").height());
+          jQuery("#colcontent").height(contentheight);
+          jQuery("#container").width($(window).width() * 0.95);
+        })
+    </script>
     <div id="container">
       <div id="top">
         <h1>
