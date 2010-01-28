@@ -4,8 +4,8 @@
 import re
 import amazonproduct
 
-_aws_id = '0YBWVTC8EB181VVJ2XG2'
-_aws_key = 'nUr+89Q78Uwf8N38zdLVMWTx3PIYS8wQRoluP3b2'
+_aws_id = ''
+_aws_key = ''
 _aws_ns = {'aws': 'http://webservices.amazon.com/AWSECommerceService/2009-10-01'}
 
 _aws_api = amazonproduct.API(_aws_id, _aws_key, locale='us')
@@ -197,6 +197,18 @@ def delloan():
             redirect(URL(r=request, f='show', args=book_id))
         return dict(form=form)
 
+kwdform = FORM(TABLE(TR(TD('Keyword Search:  ', INPUT(_name='keywords', requires=IS_NOT_EMPTY()))),
+        TR(TD("Columns to display", BR(), SELECT(COLUMN_AVAIL[:-1], _name='columns', _multiple=True, value='All', requires=[IS_IN_SET(COLUMN_AVAIL[:-1], multiple=True), IS_NOT_EMPTY()]))),
+        TR(INPUT(_type='submit', _value='Search'))))
+
+advform = FORM(TABLE(
+   TR('Author: ', INPUT(_name='author')),
+   TR('Title: ', INPUT(_name='title')),
+   TR('Illustrator: ', INPUT(_name='illus')),
+   TR(TD("Columns to display", BR(), SELECT(COLUMN_AVAIL[:-1], _name='columns', _multiple=True, value='All', requires=[IS_IN_SET(COLUMN_AVAIL[:-1], multiple=True), IS_NOT_EMPTY()]))),
+   TR(INPUT(_type='submit', _value='Search')),
+))
+
 #uncomment this line to require login to search books by keyword
 #@auth.requires_login()
 def kwdsearch():
@@ -208,9 +220,7 @@ def kwdsearch():
             session.keywords = ''
             redirect(URL(r=request, f='kwdsearch'))
     response.view = "%s/search.%s" % (request.controller, request.extension)
-    form = FORM(TABLE(TR(TD('Keyword Search:  ', INPUT(_name='keywords', requires=IS_NOT_EMPTY()))),
-        TR(TD("Columns to display", BR(), SELECT(COLUMN_AVAIL[:-1], _name='columns', _multiple=True, value='All', requires=[IS_IN_SET(COLUMN_AVAIL[:-1], multiple=True), IS_NOT_EMPTY()]))),
-        TR(INPUT(_type='submit', _value='Search'))))
+    form = kwdform
     results = None
     terms=None
     query=None
@@ -246,7 +256,8 @@ def kwdsearch():
 #@auth.requires_login()    
 def advsearch():
     response.view = "%s/search.%s" % (request.controller, request.extension)
-    return dict(form="Sorry, this function has not yet been implemented.", results=None)
+    form=advform
+    return dict(form=form, results=None)
 
 def download():
     """
