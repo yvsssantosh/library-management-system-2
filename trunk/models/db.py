@@ -93,8 +93,8 @@ db.define_table("books",
     Field("awards", "string", length=50, default=None),
     Field("language", "string", length=20, notnull=True, default=None),
     Field("condition", "string", length=10, notnull=True, default=None, requires=IS_IN_SET(COND_CHOICES)),
-    Field("signed", "boolean", label='Signed', notnull=True, default=False),
-    Field("antique", "boolean", label='Antique', notnull=True, default=False),
+    Field("signed", "boolean", label='Signed', notnull=True, default=False, requires=False),
+    Field("antique", "boolean", label='Antique', notnull=True, default=False, requires=False),
     Field("comments", "text", default=None))
 
 from datetime import datetime
