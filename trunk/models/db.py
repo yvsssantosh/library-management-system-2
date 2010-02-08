@@ -1,7 +1,18 @@
 # coding: utf8
+import sys, os
 
 #db = DAL('postgres://libuser:pswd@localhost/lmsweb') # sample connection string for postgres
 db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
+
+
+modpath = os.path.join(request.folder, 'modules')
+if not modpath in sys.path:
+	sys.path.append(modpath)
+import lmsconfig
+cfg = lmsconfig.getcfg(modpath)
+
+db = DAL(cfg.dbpath)
+#db = DAL('sqlite://storage.sqlite')       # use SQLite or other DB
 
 from gluon.tools import *
 # The below lines are commented out to disable authentication completely.  If you want to turn authentication on,

@@ -3,48 +3,59 @@
 # If you want to enable authentication, uncomment lines with @auth decorator functions. 
 import re
 import amazonproduct
+import sys, os
 
-_aws_id = ''
-_aws_key = ''
-_aws_ns = {'aws': 'http://webservices.amazon.com/AWSECommerceService/2009-10-01'}
+modpath = os.path.join(request.folder, 'modules')
+if not modpath in sys.path:
+	sys.path.append(modpath)
+import lmsconfig
+cfg = lmsconfig.getcfg(modpath)
 
-_aws_api = amazonproduct.API(_aws_id, _aws_key, locale='us')
+if cfg.aws_enable:
+	_aws_ns = {'aws': 'http://webservices.amazon.com/AWSECommerceService/2009-10-01'}
+	_aws_api = amazonproduct.API(cfg.aws_id, cfg.aws_key, locale='us')
 
 def book_search(kwds):
-    if len(kwds):
-        terms = []
-        for k in kwds:
-            terms.append(k + ':' + kwds[k])
-        pwrsrch = ' and '.join(terms)
-        nodes = _aws_api.item_search('Books', ResponseGroup='ItemAttributes', Power=pwrsrch)
-        books = []
-        for book in nodes.xpath('//aws:Items/aws:Item', namespaces=_aws_ns):
-            try:
-                books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, "%010d" % book.ItemAttributes.ISBN.pyval))
-            except:
-                books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, 'ASIN:%s' % book.ASIN))
-        return books
-    else:
-        return None
+	if cfg.aws_enable:
+		if len(kwds):
+			terms = []
+			for k in kwds:
+				terms.append(k + ':' + kwds[k])
+				pwrsrch = ' and '.join(terms)
+				nodes = _aws_api.item_search('Books', ResponseGroup='ItemAttributes', Power=pwrsrch)
+				books = []
+			for book in nodes.xpath('//aws:Items/aws:Item', namespaces=_aws_ns):
+				try:
+					books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, "%010d" % book.ItemAttributes.ISBN.pyval))
+				except:
+					books.append((book.ItemAttributes.Author, book.ItemAttributes.Title, 'ASIN:%s' % book.ASIN))
+			return books
+		else:
+			return None
+	else:
+		return None
 
 def item_lookup(isbn):
-    if isbn.startswith('ASIN:'):
-        asin = isbn.split(':')[1]
-        node = _aws_api.item_lookup(asin, ResponseGroup='ItemAttributes')
-    else:
-        newisbn = ''.join(isbn.split('-'))
-        node = _aws_api.item_lookup(newisbn, IdType='ISBN', SearchIndex='Books', ResponseGroup='ItemAttributes')
-    nodeatts = node.xpath('//aws:ItemAttributes', namespaces=_aws_ns)
-    book = {'author': nodeatts[0].Author}
-    book['title'] = nodeatts[0].Title
-    try:
-        book['isbn'] = nodeatts[0].ISBN
-    except:
-        book['isbn'] = ''
-    book['publisher'] = nodeatts[0].Publisher
-    book['copyright'] = nodeatts[0].PublicationDate.pyval.split('-')[0]
-    return book
-
+	if cfg.aws_enable:
+		if isbn.startswith('ASIN:'):
+			asin = isbn.split(':')[1]
+			node = _aws_api.item_lookup(asin, ResponseGroup='ItemAttributes')
+		else:
+			newisbn = ''.join(isbn.split('-'))
+			node = _aws_api.item_lookup(newisbn, IdType='ISBN', SearchIndex='Books', ResponseGroup='ItemAttributes')
+		nodeatts = node.xpath('//aws:ItemAttributes', namespaces=_aws_ns)
+		book = {'author': nodeatts[0].Author}
+		book['title'] = nodeatts[0].Title
+		try:
+			book['isbn'] = nodeatts[0].ISBN
+		except:
+			book['isbn'] = ''
+		book['publisher'] = nodeatts[0].Publisher
+		book['copyright'] = nodeatts[0].PublicationDate.pyval.split('-')[0]
+		return book
+	else:
+		return None
+		
 def index():
     """
     example action using the internationalization operator T and flash
